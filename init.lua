@@ -125,6 +125,7 @@ require('lazy').setup({
       },
       on_attach = function(bufnr)
         vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
+        vim.keymap.set('n', '<leader>hr', require('gitsigns').reset_hunk, { buffer = bufnr, desc = 'Reset git hunk' })
 
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
@@ -233,8 +234,12 @@ require('lazy').setup({
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 
+-- fast scroll
+vim.keymap.set({ 'n', 'x' }, '<a-j>', '8j')
+vim.keymap.set({ 'n', 'x' }, '<a-k>', '8k')
+
 -- auto_save
-vim.keymap.set({ 'i', 'n', 'v', 'x' }, '<Esc>', '<Esc><cmd>w<cr>')
+vim.keymap.set({ 'i', 'n', 'v', 'x' }, '<Esc><Esc>', '<Esc><cmd>w<cr>')
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -452,6 +457,7 @@ local on_attach = function(_, bufnr)
   nmap('<leader>sl', '<cmd>Lspsaga finder<cr>', '[S]earch [L]SP')
   nmap('<leader>dd', '<cmd>Lspsaga peek_definition<cr>', "Peek [D]efinition")
   nmap('<leader>co', '<cmd>Lspsaga outline<cr>', "[C]ode [O]utline")
+  nmap('<leader>tt', '<cmd>Lspsaga terminal<cr>', "Float [T]erminal")
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')

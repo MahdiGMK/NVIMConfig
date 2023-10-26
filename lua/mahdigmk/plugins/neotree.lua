@@ -1,5 +1,5 @@
 -- Unless you are still migrating, remove the deprecated commands from v1.x
-vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+-- vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 
 return {
   "nvim-neo-tree/neo-tree.nvim",
@@ -10,8 +10,12 @@ return {
     "MunifTanjim/nui.nvim",
   },
   config = function()
-    require('neo-tree').setup {}
-    vim.cmd.Neotree('right')
+    require('neo-tree').setup {
+      window = {
+        position = 'float'
+      }
+    }
+
     vim.keymap.set('n', '<C-n>', function()
       vim.cmd.Neotree('toggle')
     end, { desc = "Neotree" })
