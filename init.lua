@@ -457,7 +457,7 @@ local on_attach = function(_, bufnr)
   nmap('<leader>sl', '<cmd>Lspsaga finder<cr>', '[S]earch [L]SP')
   nmap('<leader>dd', '<cmd>Lspsaga peek_definition<cr>', "Peek [D]efinition")
   nmap('<leader>co', '<cmd>Lspsaga outline<cr>', "[C]ode [O]utline")
-  nmap('<leader>tt', '<cmd>Lspsaga terminal<cr>', "Float [T]erminal")
+  nmap('<leader>tt', '<cmd>Lspsaga term_toggle<cr>', "Float [T]erminal")
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -534,8 +534,12 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Ensure the servers above are installed
 local lspconfig = require("lspconfig")
-lspconfig.rust_analyzer.setup {}
-lspconfig.clangd.setup {}
+lspconfig.rust_analyzer.setup {
+  on_attach = on_attach
+}
+lspconfig.clangd.setup {
+  on_attach = on_attach
+}
 local mason_lspconfig = require 'mason-lspconfig'
 
 mason_lspconfig.setup {
