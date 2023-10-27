@@ -533,6 +533,9 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Ensure the servers above are installed
+local lspconfig = require("lspconfig")
+lspconfig.rust_analyzer.setup {}
+lspconfig.clangd.setup {}
 local mason_lspconfig = require 'mason-lspconfig'
 
 mason_lspconfig.setup {
