@@ -25,6 +25,11 @@ return {
     local dap = require 'dap'
     local dapui = require 'dapui'
 
+    dap.adapters.gdb = {
+      type = "executable",
+      command = "gdb",
+      args = { "-i", "dap" }
+    }
     dap.adapters.codelldb = {
       type = 'server',
       port = "${port}",
@@ -51,6 +56,17 @@ return {
     }
     dap.configurations.c = dap.configurations.cpp
     dap.configurations.rust = dap.configurations.cpp
+    dap.configurations.asm = {
+      {
+        name = "Launch",
+        type = "gdb",
+        request = "launch",
+        program = function()
+          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+        cwd = "${workspaceFolder}",
+      },
+    }
 
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
