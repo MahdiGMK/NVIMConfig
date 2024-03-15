@@ -235,15 +235,15 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 
 -- fast scroll
-vim.keymap.set({ 'n', 'x' }, '<a-j>', '8j')
-vim.keymap.set({ 'n', 'x' }, '<a-k>', '8k')
+vim.keymap.set({ 'n', 'x' }, '<a-j>', '16j')
+vim.keymap.set({ 'n', 'x' }, '<a-k>', '16k')
 
 -- auto_save
 vim.keymap.set({ 'i', 'n', 'v', 'x' }, '<Esc><Esc>', '<Esc><cmd>w<cr>')
 
 -- Set highlight on search
-vim.o.hlsearch = false
-vim.o.incsearch = true
+vim.opt.hlsearch = true
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Make line numbers default
 vim.wo.number = true
@@ -301,6 +301,14 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
+-- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
+-- is not what someone will guess without a bit more experience.
+--
+-- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
+-- or just use <C-\><C-n> to exit terminal mode
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -426,7 +434,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
   -- to define small helper and utility functions so you don't have to repeat yourself
   -- many times.
@@ -441,12 +449,13 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
-  require "lsp_signature".on_attach({
-    bind = true, -- This is mandatory, otherwise border config won't get registered.
-    handler_opts = {
-      border = "rounded"
-    }
-  }, bufnr)
+  vim.o.foldmethod = "indent"
+  -- require "lsp_signature".on_attach({
+  --   bind = false, -- This is mandatory, otherwise border config won't get registered.
+  --   handler_opts = {
+  --     border = "rounded"
+  --   }
+  -- }, bufnr)
 
 
   -- nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
@@ -482,6 +491,9 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
+
+  -- Update nlsp-settings when LSPs are attached
+  require('nlspsettings').update_settings(client.name)
 end
 
 -- document existing key chains
@@ -538,6 +550,9 @@ lspconfig.rust_analyzer.setup {
   on_attach = on_attach
 }
 lspconfig.clangd.setup {
+  on_attach = on_attach
+}
+lspconfig.r_language_server.setup {
   on_attach = on_attach
 }
 local mason_lspconfig = require 'mason-lspconfig'
@@ -633,3 +648,7 @@ hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
 end)
 
 require("ibl").setup { indent = { highlight = highlight } }
+
+if vim.g.neovide then
+  vim.g.neovide_cursor_trail_size = 0.1
+end

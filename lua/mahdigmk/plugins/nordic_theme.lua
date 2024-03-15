@@ -8,7 +8,7 @@ return {
                 blend = 1
             }
         }
-        require 'nordic'.load()
-        vim.cmd.colorscheme 'nordic'
+        -- require 'nordic'.load()
+        -- vim.cmd.colorscheme 'nordic'
     end
 }

@@ -11,6 +11,9 @@ return
           exec = '<cr>',
           select = 'x'
         }
+      },
+      symbol_in_winbar = {
+        enable = false
       }
     })
   end,

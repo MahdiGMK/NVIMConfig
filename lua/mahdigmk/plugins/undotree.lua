@@ -7,13 +7,13 @@ local nmap = function(keys, func, desc)
 end
 
 return {
-  "mbbill/undotree",
+  'mbbill/undotree',
   config = function()
-    nmap("<leader>u", vim.cmd.UndotreeToggle, "[U]ndo Tree")
+    nmap('<leader>u', vim.cmd.UndotreeToggle, '[U]ndo Tree')
 
     vim.opt.swapfile = false
     vim.opt.backup = false
-    vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+    vim.opt.undodir = os.getenv 'HOME' .. '/.vim/undodir'
     vim.opt.undofile = true
-  end
+  end,
 }
