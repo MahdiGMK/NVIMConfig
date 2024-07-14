@@ -246,10 +246,13 @@ require('lazy').setup({
 -- vim.keymap.set({ 'n', 'x' }, 'ر', 'v')
 --
 -- fast scroll
-vim.keymap.set({ 'n', 'x' }, '<A-l>', '$')
-vim.keymap.set({ 'n', 'x' }, '<A-h>', '^')
-vim.keymap.set({ 'n', 'x' }, '<A-j>', '16j')
-vim.keymap.set({ 'n', 'x' }, '<A-k>', '16k')
+local cinnamon = require("cinnamon")
+cinnamon.setup()
+
+vim.keymap.set({ 'n', 'x' }, '<A-l>', function() cinnamon.scroll('$') end)
+vim.keymap.set({ 'n', 'x' }, '<A-h>', function() cinnamon.scroll('^') end)
+vim.keymap.set({ 'n', 'x' }, '<A-j>', function() cinnamon.scroll('16j') end)
+vim.keymap.set({ 'n', 'x' }, '<A-k>', function() cinnamon.scroll('16k') end)
 
 -- auto_save
 vim.keymap.set({ 'i', 'n', 'v', 'x' }, '<Esc><Esc>', '<Esc><cmd>w<cr>')
