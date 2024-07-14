@@ -236,6 +236,15 @@ require('lazy').setup({
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 
+-- fix persian
+-- vim.keymap.set({ 'n', 'x' }, 'ا', 'h')
+-- vim.keymap.set({ 'n', 'x' }, 'ت', 'j')
+-- vim.keymap.set({ 'n', 'x' }, 'ن', 'k')
+-- vim.keymap.set({ 'n', 'x' }, 'م', 'l')
+--
+-- vim.keymap.set({ 'n', 'x' }, 'ق', 'r')
+-- vim.keymap.set({ 'n', 'x' }, 'ر', 'v')
+--
 -- fast scroll
 vim.keymap.set({ 'n', 'x' }, '<A-l>', '$')
 vim.keymap.set({ 'n', 'x' }, '<A-h>', '^')
@@ -532,6 +541,9 @@ local servers = {
     -- rust_analyzer = {},
     -- tsserver = {},
     -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+    verible = {
+        cmd = { "verible-verilog-ls", "--indentation_spaces=4", "--wrap_end_else_clauses" }
+    },
 
     lua_ls = {
         Lua = {
@@ -559,6 +571,20 @@ lspconfig.clangd.setup {
 lspconfig.r_language_server.setup {
     on_attach = on_attach
 }
+local lspconfutil = require 'lspconfig/util'
+local root_pattern = lspconfutil.root_pattern("veridian.yml", ".git")
+lspconfig.veridian.setup {
+    cmd = { 'veridian' },
+    on_attach = on_attach,
+    root_dir = function(fname)
+        local filename = lspconfutil.path.is_absolute(fname) and fname
+            or lspconfutil.path.join(vim.loop.cwd(), fname)
+        return root_pattern(filename) or lspconfutil.path.dirname(filename)
+    end,
+}
+lspconfig.verible.setup {
+    on_attach = on_attach,
+}
 local mason_lspconfig = require 'mason-lspconfig'
 
 mason_lspconfig.setup {
@@ -568,6 +594,7 @@ mason_lspconfig.setup {
 mason_lspconfig.setup_handlers {
     function(server_name)
         require('lspconfig')[server_name].setup {
+            cmd = (servers[server_name] or {}).cmd,
             capabilities = capabilities,
             on_attach = on_attach,
             settings = servers[server_name],
