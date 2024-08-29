@@ -571,6 +571,9 @@ lspconfig.rust_analyzer.setup {
 lspconfig.clangd.setup {
     on_attach = on_attach
 }
+lspconfig.zls.setup {
+    on_attach = on_attach
+}
 lspconfig.r_language_server.setup {
     on_attach = on_attach
 }
