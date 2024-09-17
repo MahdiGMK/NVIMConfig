@@ -1,5 +1,5 @@
 return {
-  'lostl1ght/keymap-switch.nvim',
+  'MahdiGMK/keymap-switch.nvim',
   dependencies = {
     'nvim-lualine/lualine.nvim'
   },
